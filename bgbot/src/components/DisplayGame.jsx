@@ -4,134 +4,88 @@ import Languages from "./Languages";
 
 const DisplayGame = () => {
   //users
-  const [users, setUsers] = useState([]);
-  const gameidRef = useRef();
-  const gameRef = useRef();
-  const ownerRef = useRef();
-  const playsRef = useRef();
-  const groupRef = useRef();
-  const statusRef = useRef();
+  const [gameNames, setGameNames] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedGameName, setSelectedGameName] = useState("");
+  const [userName, setUserName] = useState("");
+  const [userGroup, setUserGroup] = useState("");
+  const searchRef = useRef();
 
   const getGame = async (signal) => {
-    const gameid = gameidRef.current.value;
+    const searchgame = searchRef.current.value;
 
     try {
-      var req = new XMLHttpRequest();
+      const req = new XMLHttpRequest();
       req.open(
         "GET",
-        "http://localhost:8080/https://www.boardgamegeek.com/xmlapi2/thing?id=" +
-          gameid,
-        false
+        "http://localhost:8080/https://www.boardgamegeek.com/xmlapi2/search?query=" +
+          searchgame,
+        true
       );
+      req.onload = () => {
+        if (req.status === 200) {
+          const parser = new DOMParser();
+          const xmlDoc = parser.parseFromString(req.responseText, "text/xml");
+          const items = xmlDoc.getElementsByTagName("item");
+          const names = Array.from(items).map((item, i) => {
+            const gameName = item
+              .getElementsByTagName("name")[0]
+              .getAttribute("value");
+            const gameId = item.getAttribute("id"); // Extract the game ID
+            return `${i + 1}. ${gameName} (ID: ${gameId})`; // Include the game ID in the output
+          });
+
+          setGameNames(names);
+        }
+      };
       req.send(null);
-      console.log(req.responseText);
-      if (req.ok) {
-        // const data = await res.json();
-        // setUsers(data);
-      }
     } catch (error) {
-      if (error.name !== "AbortError") {
-        console.log(error.message);
-      }
+      console.error(error.message);
     }
   };
 
-  const getUsers = async (signal) => {
+  const addGame = async (signal) => {
     try {
+      // Extract the game ID from the selectedGameName string
+      const gameIdMatch = selectedGameName.match(/\(ID: (\d+)\)/);
+      const gameId = gameIdMatch ? gameIdMatch[1] : null; // Extract the game ID
+
+      const gameNameMatch = selectedGameName.match(/^\d+\.\s*(.*?)\s*\(/);
+      const gameName = gameNameMatch ? gameNameMatch[1] : selectedGameName; // Use the extracted game name or the original string if no match
+
       const res = await fetch(
         "https://api.airtable.com/v0/appnFG2kbIVgZNH8a/boardgames",
         {
-          method: "GET", // Specify the method if not 'GET'
+          method: "POST", // Specify the method if not 'GET'
           headers: {
             Authorization:
               "Bearer pat4GDBKgsQnZPgiY.c451f2ce36ec83b5deaf0ffae6c9f073e44d9c5ee26d29b71b54edb92d249246", // Correctly set the Authorization header
             "Content-Type": "application/json", // Optionally set the Content-Type header if needed
           },
+          body: JSON.stringify({
+            fields: {
+              owner: userName,
+              group: userGroup,
+              gameid: parseInt(gameId),
+              gamename: gameName,
+              plays: 0,
+              status: "owned",
+            },
+          }),
           signal, // Pass the signal for aborting the request
         }
       );
 
       if (res.ok) {
-        const data = await res.json();
-        setUsers(data);
+        console.log("Game added successfully");
+        // Optionally, clear the form and hide the modal
+        setUserName("");
+        setUserGroup("");
+        setShowModal(false);
       }
     } catch (error) {
       if (error.name !== "AbortError") {
         console.log(error.message);
-      }
-    }
-  };
-
-  const addUser = async () => {
-    const name = nameRef.current.value;
-    const age = ageRef.current.value;
-    const country = countryRef.current.value;
-
-    if (
-      name.length >= 1 &&
-      name.length <= 50 &&
-      country.length >= 1 &&
-      country.length <= 50 &&
-      parseInt(age) !== NaN &&
-      parseInt(age) > 0
-    ) {
-      const res = await fetch(import.meta.env.VITE_SERVER + "/hw/users", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: nameRef.current.value,
-          age: ageRef.current.value,
-          country: countryRef.current.value,
-        }),
-      });
-      if (res.ok) {
-        getUsers();
-        nameRef.current.value = "";
-        ageRef.current.value = "";
-        countryRef.current.value = "";
-      } else {
-        console.log("error occured");
-      }
-    }
-  };
-
-  //languages
-  const [langs, setLangs] = useState([]);
-  const langRef = useRef();
-
-  const getLangs = async (signal) => {
-    try {
-      const res = await fetch(import.meta.env.VITE_SERVER + "/hw/languages", {
-        signal,
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        setLangs(data);
-      }
-    } catch (error) {
-      if (error.name !== "AbortError") {
-        console.log(error.message);
-      }
-    }
-  };
-
-  const addLang = async () => {
-    const lang = langRef.current.value;
-
-    if (lang.length >= 1 && lang.length <= 20) {
-      const res = await fetch(import.meta.env.VITE_SERVER + "/hw/languages", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          language: langRef.current.value,
-        }),
-      });
-      if (res.ok) {
-        getLangs();
-        langRef.current.value = "";
-      } else {
-        console.log("error occured");
       }
     }
   };
@@ -139,8 +93,7 @@ const DisplayGame = () => {
   //use effects
   useEffect(() => {
     const controller = new AbortController();
-    getUsers(controller.signal);
-    getLangs(controller.signal);
+    getGame(controller.signal);
 
     return () => {
       controller.abort();
@@ -149,21 +102,64 @@ const DisplayGame = () => {
 
   return (
     <div className="container">
-      <h1>Board Games</h1>
+      <h1>Search or Add New Board Games: </h1>
+      <br />
 
       <div className="row">
         <input
           type="text"
-          ref={langRef}
-          placeholder="new game"
+          ref={searchRef}
+          placeholder="Search Game?"
           className="col-md-9"
         ></input>
 
-        <button className="col-md-3" onClick={addLang}>
-          add game
+        <button className="col-md-3" onClick={getGame}>
+          Search
         </button>
       </div>
+
+      <div id="gameNames">
+        <br />
+        {showModal && (
+          <div>
+            <input
+              type="text"
+              placeholder="Your Name"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Your Group"
+              value={userGroup}
+              onChange={(e) => setUserGroup(e.target.value)}
+            />
+            <button onClick={addGame}>Submit</button>
+          </div>
+        )}
+        <br />
+        {gameNames.map((name, index) => {
+          // Assuming the game ID is included in the name string and can be extracted
+          const gameId = name.match(/\(ID: (\d+)\)/);
+          return (
+            <div key={gameId ? gameId[1] : index}>
+              <span>{name}</span>
+              <button
+                onClick={() => {
+                  console.log(name);
+                  setSelectedGameName(name);
+                  setShowModal(true);
+                }}
+              >
+                Add
+              </button>
+            </div>
+          );
+        })}
+      </div>
       <br />
+      <br />
+      <h2>Recently Added:</h2>
 
       <div className="row">
         <div className="col-sm-4">boardgame</div>
@@ -172,15 +168,6 @@ const DisplayGame = () => {
         <div className="col-sm-3">dateadded</div>
         <div className="col-sm-2">status</div>
       </div>
-      {langs.map((item) => {
-        return (
-          <Languages
-            language={item.language}
-            created={item.created_at}
-            getLangs={getLangs}
-          />
-        );
-      })}
     </div>
   );
 };
