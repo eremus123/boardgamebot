@@ -172,6 +172,32 @@ const DisplayGame = () => {
     }
   };
 
+  const delGame = async (recordId) => {
+    try {
+      const res = await fetch(
+        `https://api.airtable.com/v0/appnFG2kbIVgZNH8a/boardgames/${recordId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization:
+              "Bearer pat4GDBKgsQnZPgiY.c451f2ce36ec83b5deaf0ffae6c9f073e44d9c5ee26d29b71b54edb92d249246", // Correctly set the Authorization header
+
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (res.ok) {
+        console.log("Game deleted successfully");
+        //refetch the recent games to update the UI
+        fetchGames();
+      } else {
+        console.error("Failed to delete game", await response.text());
+      }
+    } catch (error) {
+      console.error("Error deleting game:", error);
+    }
+  };
+
   //use effects
   useEffect(() => {
     const controller = new AbortController();
@@ -254,19 +280,22 @@ const DisplayGame = () => {
       <h2>Recently Added Games:</h2>
 
       <div className="row">
-        <div className="col-sm-4">boardgame</div>
+        <div className="col-sm-5">boardgame</div>
         <div className="col-sm-1">gameid</div>
-        <div className="col-sm-2">owner</div>
-        <div className="col-sm-3">dateadded</div>
-        <div className="col-sm-2">status</div>
+        <div className="col-sm-1">owner</div>
+        <div className="col-sm-2">dateadded</div>
+        <div className="col-sm-1">status</div>
       </div>
       {recentGames.map((game) => (
         <div key={game.id} className="row">
-          <div className="col-sm-4">{game.fields.gamename}</div>
+          <div className="col-sm-5">{game.fields.gamename}</div>
           <div className="col-sm-1">{game.fields.gameid}</div>
-          <div className="col-sm-2">{game.fields.owner}</div>
-          <div className="col-sm-3">{game.fields.dateadded}</div>
-          <div className="col-sm-2">{game.fields.status}</div>
+          <div className="col-sm-1">{game.fields.owner}</div>
+          <div className="col-sm-2">{game.fields.dateadded}</div>
+          <div className="col-sm-1">{game.fields.status}</div>
+          <button className="col-sm-2" onClick={() => delGame(game.id)}>
+            Delete Game
+          </button>
         </div>
       ))}
     </div>
