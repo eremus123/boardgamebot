@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import Book from "./Book";
-import Languages from "./Languages";
 
 const DisplayGame = () => {
   //users
@@ -13,6 +11,7 @@ const DisplayGame = () => {
 
   const getGame = async (signal) => {
     const searchgame = searchRef.current.value;
+    setGameNames([]);
 
     try {
       const req = new XMLHttpRequest();
@@ -49,7 +48,10 @@ const DisplayGame = () => {
       // Extract the game ID from the selectedGameName string
       const gameIdMatch = selectedGameName.match(/\(ID: (\d+)\)/);
       const gameId = gameIdMatch ? gameIdMatch[1] : null; // Extract the game ID
-
+      // Get the current date/time in ISO format
+      const dateAdded = new Date().toISOString().split("T")[0];
+      console.log(dateAdded);
+      //Store only the game Name:
       const gameNameMatch = selectedGameName.match(/^\d+\.\s*(.*?)\s*\(/);
       const gameName = gameNameMatch ? gameNameMatch[1] : selectedGameName; // Use the extracted game name or the original string if no match
 
@@ -70,6 +72,7 @@ const DisplayGame = () => {
               gamename: gameName,
               plays: 0,
               status: "owned",
+              dateadded: dateAdded,
             },
           }),
           signal, // Pass the signal for aborting the request
@@ -94,6 +97,7 @@ const DisplayGame = () => {
   useEffect(() => {
     const controller = new AbortController();
     getGame(controller.signal);
+    addGame(controller.signal);
 
     return () => {
       controller.abort();
