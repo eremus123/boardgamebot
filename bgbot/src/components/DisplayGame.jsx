@@ -93,11 +93,38 @@ const DisplayGame = () => {
     }
   };
 
+  const [recentGames, setRecentGames] = useState([]);
+  const fetchGames = async (signal) => {
+    try {
+      const res = await fetch(
+        "https://api.airtable.com/v0/appnFG2kbIVgZNH8a/boardgames?maxRecords=10&view=Grid%20view&sort%5B0%5D%5Bfield%5D=dateadded&sort%5B0%5D%5Bdirection%5D=desc",
+        {
+          method: "GET",
+          headers: {
+            Authorization:
+              "Bearer pat4GDBKgsQnZPgiY.c451f2ce36ec83b5deaf0ffae6c9f073e44d9c5ee26d29b71b54edb92d249246", // Correctly set the Authorization header
+            "Content-Type": "application/json", // Optionally set the Content-Type header if needed
+          },
+          signal, // Pass the signal for aborting the request
+        }
+      );
+      if (res.ok) {
+        const data = await res.json();
+        setRecentGames(data.records);
+      }
+    } catch (error) {
+      if (error.name !== "AbortError") {
+        console.log(error.message);
+      }
+    }
+  };
+
   //use effects
   useEffect(() => {
     const controller = new AbortController();
     getGame(controller.signal);
     addGame(controller.signal);
+    fetchGames(controller.signal);
 
     return () => {
       controller.abort();
@@ -163,7 +190,7 @@ const DisplayGame = () => {
       </div>
       <br />
       <br />
-      <h2>Recently Added:</h2>
+      <h2>Recently Added Games:</h2>
 
       <div className="row">
         <div className="col-sm-4">boardgame</div>
@@ -172,6 +199,15 @@ const DisplayGame = () => {
         <div className="col-sm-3">dateadded</div>
         <div className="col-sm-2">status</div>
       </div>
+      {recentGames.map((game) => (
+        <div key={game.id} className="row">
+          <div className="col-sm-4">{game.fields.gamename}</div>
+          <div className="col-sm-1">{game.fields.gameid}</div>
+          <div className="col-sm-2">{game.fields.owner}</div>
+          <div className="col-sm-3">{game.fields.dateadded}</div>
+          <div className="col-sm-2">{game.fields.status}</div>
+        </div>
+      ))}
     </div>
   );
 };
