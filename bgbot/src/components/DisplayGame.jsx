@@ -9,7 +9,11 @@ const DisplayGame = () => {
   const [userGroup, setUserGroup] = useState("");
   const searchRef = useRef();
 
-  const getGame = async (signal) => {
+
+  const abortController = new AbortController();
+
+
+  const getGame = async () => {
     event.preventDefault(); // Prevent the default form submission behavior
     const searchgame = searchRef.current.value;
     setGameNames([]);
@@ -44,7 +48,7 @@ const DisplayGame = () => {
     }
   };
 
-  const addGame = async (signal) => {
+  const addGame = async () => {
     try {
       // Extract the game ID from the selectedGameName string
       const gameIdMatch = selectedGameName.match(/\(ID: (\d+)\)/);
@@ -76,7 +80,6 @@ const DisplayGame = () => {
               dateadded: dateAdded,
             },
           }),
-          signal, // Pass the signal for aborting the request
         }
       );
 
@@ -95,7 +98,7 @@ const DisplayGame = () => {
     }
   };
 
-  const addWishlist = async (signal) => {
+  const addWishlist = async () => {
     try {
       // Extract the game ID from the selectedGameName string
       const gameIdMatch = selectedGameName.match(/\(ID: (\d+)\)/);
@@ -127,7 +130,6 @@ const DisplayGame = () => {
               dateadded: dateAdded,
             },
           }),
-          signal, // Pass the signal for aborting the request
         }
       );
 
@@ -147,7 +149,7 @@ const DisplayGame = () => {
   };
 
   const [recentGames, setRecentGames] = useState([]);
-  const fetchGames = async (signal) => {
+  const fetchGames = async () => {
     try {
       const res = await fetch(
         "https://api.airtable.com/v0/appnFG2kbIVgZNH8a/boardgames?maxRecords=10&view=Grid%20view&sort%5B0%5D%5Bfield%5D=dateadded&sort%5B0%5D%5Bdirection%5D=desc",
@@ -158,7 +160,6 @@ const DisplayGame = () => {
               "Bearer pat4GDBKgsQnZPgiY.c451f2ce36ec83b5deaf0ffae6c9f073e44d9c5ee26d29b71b54edb92d249246", // Correctly set the Authorization header
             "Content-Type": "application/json", // Optionally set the Content-Type header if needed
           },
-          signal, // Pass the signal for aborting the request
         }
       );
       if (res.ok) {
@@ -200,12 +201,12 @@ const DisplayGame = () => {
 
   //use effects
   useEffect(() => {
-    const controller = new AbortController();
-    fetchGames(controller.signal);
+    fetchGames();
     return () => {
-      controller.abort();
+      // Abort all ongoing fetch requests when the component unmounts
+      abortController.abort();
     };
-  }, []);
+ }, []);
 
   return (
     <div className="container">
