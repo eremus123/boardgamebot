@@ -17,34 +17,58 @@ const DisplayGame = () => {
     event.preventDefault(); // Prevent the default form submission behavior
     const searchgame = searchRef.current.value;
     setGameNames([]);
-
+   
     try {
-      const req = new XMLHttpRequest();
-      req.open(
-        "GET",
-        "http://localhost:8080/https://www.boardgamegeek.com/xmlapi2/search?query=" +
-          searchgame,
-        true
-      );
-      req.onload = () => {
-        if (req.status === 200) {
-          const parser = new DOMParser();
-          const xmlDoc = parser.parseFromString(req.responseText, "text/xml");
-          const items = xmlDoc.getElementsByTagName("item");
-          const names = Array.from(items).map((item, i) => {
-            const gameName = item
-              .getElementsByTagName("name")[0]
-              .getAttribute("value");
-            const gameId = item.getAttribute("id"); // Extract the game ID
-            return `${i + 1}. ${gameName} (ID: ${gameId})`; // Include the game ID in the output
-          });
-
-          setGameNames(names);
-        }
-      };
-      req.send(null);
+       const req = new XMLHttpRequest();
+       req.open(
+         "GET",
+         "http://localhost:8080/https://www.boardgamegeek.com/xmlapi2/search?type=boardgame,boardgameexpansion&query=" +
+           searchgame,
+         true
+       );
+       req.onload = async () => {
+         if (req.status === 200) {
+           const parser = new DOMParser();
+           const xmlDoc = parser.parseFromString(req.responseText, "text/xml");
+           const items = xmlDoc.getElementsByTagName("item");
+           const names = await Promise.all(
+             Array.from(items).map(async (item, i) => {
+               const gameName = item
+                 .getElementsByTagName("name")[0]
+                 .getAttribute("value");
+               const gameId = item.getAttribute("id"); // Extract the game ID
+               const imgUrl = await getImageUrl(gameId);
+               return {
+                 name: `${i + 1}. ${gameName} (ID: ${gameId})`,
+                 id: gameId,
+                 imgUrl: imgUrl,
+               };
+             })
+           );
+   
+           setGameNames(names);
+         }
+       };
+       req.send(null);
     } catch (error) {
-      console.error(error.message);
+       console.error(error.message);
+    }
+   };
+   
+
+
+  const getImageUrl = async (gameId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/https://www.boardgamegeek.com/xmlapi2/thing?id=${gameId}`
+      );
+      const text = await response.text();
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(text, "text/xml");
+      return xmlDoc.getElementsByTagName("thumbnail")[0].textContent;
+    } catch (error) {
+      console.error("Error fetching image:", error);
+      return null;
     }
   };
 
@@ -113,11 +137,11 @@ const DisplayGame = () => {
       const res = await fetch(
         "https://api.airtable.com/v0/appnFG2kbIVgZNH8a/boardgames",
         {
-          method: "POST", // Specify the method if not 'GET'
+          method: "POST",
           headers: {
             Authorization:
-              "Bearer pat4GDBKgsQnZPgiY.c451f2ce36ec83b5deaf0ffae6c9f073e44d9c5ee26d29b71b54edb92d249246", // Correctly set the Authorization header
-            "Content-Type": "application/json", // Optionally set the Content-Type header if needed
+              "Bearer pat4GDBKgsQnZPgiY.c451f2ce36ec83b5deaf0ffae6c9f073e44d9c5ee26d29b71b54edb92d249246",
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             fields: {
@@ -152,13 +176,13 @@ const DisplayGame = () => {
   const fetchGames = async () => {
     try {
       const res = await fetch(
-        "https://api.airtable.com/v0/appnFG2kbIVgZNH8a/boardgames?maxRecords=10&view=Grid%20view&sort%5B0%5D%5Bfield%5D=dateadded&sort%5B0%5D%5Bdirection%5D=desc",
+        "https://api.airtable.com/v0/appnFG2kbIVgZNH8a/boardgames?maxRecords=30&view=Grid%20view&sort%5B0%5D%5Bfield%5D=dateadded&sort%5B0%5D%5Bdirection%5D=desc",
         {
           method: "GET",
           headers: {
             Authorization:
-              "Bearer pat4GDBKgsQnZPgiY.c451f2ce36ec83b5deaf0ffae6c9f073e44d9c5ee26d29b71b54edb92d249246", // Correctly set the Authorization header
-            "Content-Type": "application/json", // Optionally set the Content-Type header if needed
+              "Bearer pat4GDBKgsQnZPgiY.c451f2ce36ec83b5deaf0ffae6c9f073e44d9c5ee26d29b71b54edb92d249246",
+            "Content-Type": "application/json", 
           },
         }
       );
@@ -181,7 +205,7 @@ const DisplayGame = () => {
           method: "DELETE",
           headers: {
             Authorization:
-              "Bearer pat4GDBKgsQnZPgiY.c451f2ce36ec83b5deaf0ffae6c9f073e44d9c5ee26d29b71b54edb92d249246", // Correctly set the Authorization header
+              "Bearer pat4GDBKgsQnZPgiY.c451f2ce36ec83b5deaf0ffae6c9f073e44d9c5ee26d29b71b54edb92d249246", 
 
             "Content-Type": "application/json",
           },
@@ -208,6 +232,7 @@ const DisplayGame = () => {
     };
  }, []);
 
+ 
   return (
     <div className="container">
       <h1>Search or Add New Board Games: </h1>
@@ -255,26 +280,24 @@ const DisplayGame = () => {
           </form>
         )}
         <br />
-        {gameNames.map((name, index) => {
-          // Assuming the game ID is included in the name string and can be extracted
-          const gameId = name.match(/\(ID: (\d+)\)/);
-          return (
-            <div key={gameId ? gameId[1] : index}>
-              <button
-                className="col-sm-1"
-                onClick={() => {
-                  console.log(name);
-                  setSelectedGameName(name);
-                  setShowModal(true);
-                }}
-              >
-                Add Game
-              </button>
+        {gameNames.map((game, index) => (
+        <div key={index}>
+    <img src={game.imgUrl} alt={game.name} />
+    <span>{game.name}</span>
+    <button
+      className="col-sm-1"
+      onClick={() => {
+        console.log(game.name);
+        console.log(game.imgUrl)
+        setSelectedGameName(game.name);
+        setShowModal(true);
+      }}
+    >
+      Add Game
+    </button>
+ </div>
+))}
 
-              <span>{name}</span>
-            </div>
-          );
-        })}
       </div>
       <br />
       <br />
