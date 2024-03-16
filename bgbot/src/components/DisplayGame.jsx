@@ -89,7 +89,7 @@ const DisplayGame = (props) => {
               plays: 0,
               status: "owned",
               dateadded: dateAdded,
-            },
+            },typecast:true,
           }),
         }
       );
