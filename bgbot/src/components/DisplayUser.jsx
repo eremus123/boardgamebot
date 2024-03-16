@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import Book from "./Book";
-import Languages from "./Languages";
 
 const DisplayUser = () => {
   //users
@@ -33,7 +32,7 @@ const DisplayUser = () => {
       name.length >= 1 &&
       name.length <= 50 &&
       group.length >= 1 &&
-      group.length <= 50 &&
+      group.length <= 2
 
     ) {
       const res = await fetch(import.meta.env.VITE_SERVER + "/hw/users", {
@@ -102,6 +101,7 @@ const DisplayUser = () => {
             key={item.id}
             id={item.id}
             name={item.name}
+
             group={item.group}
             getUsers={getUsers}
           />
