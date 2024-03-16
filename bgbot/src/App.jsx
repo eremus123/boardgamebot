@@ -16,19 +16,24 @@ import { useState, useEffect } from "react";
 import useFetch2 from "./hooks/UseFetch2";
 import { Suspense } from "react";
 
+
 function App() {
-  // const [data, fetchData] = useFetch2();
+  const getImageUrl = async (gameId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/https://www.boardgamegeek.com/xmlapi2/thing?id=${gameId}`
+      );
+      const text = await response.text();
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(text, "text/xml");
+      return xmlDoc.getElementsByTagName("thumbnail")[0].textContent;
+    } catch (error) {
+      console.error("Error fetching image:", error);
+      return null;
+    }
+  };
 
-  // useEffect(() => {
-  //   fetchData("https://jsonplaceholder.typicode.com/comments");
-  // }, []);
   return (
-    // <>
-    //   {data.map((item) => (
-    //     <div>{JSON.stringify(item)}</div>
-    //   ))}
-    // </>
-
     <>
       <Suspense fallback={<h1>loading...</h1>}>
         <NavBar></NavBar>
@@ -37,8 +42,8 @@ function App() {
           <Route path="main" element={<Main />} />
           <Route path="groups/:id" element={<Groups />} />
           <Route path="list" element={<List />} />
-          <Route path="games" element={<Games />} />
-          <Route path="users" element={<Users />} />
+          <Route path="games" element={<Games getImageUrl={getImageUrl}/>} />
+          <Route path="users" element={<Users getImageUrl={getImageUrl}/>} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>

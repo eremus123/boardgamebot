@@ -6,8 +6,7 @@ const DisplayUser = () => {
   //users
   const [users, setUsers] = useState([]);
   const nameRef = useRef();
-  const ageRef = useRef();
-  const countryRef = useRef();
+  const groupRef = useRef();
 
   const getUsers = async (signal) => {
     try {
@@ -28,16 +27,14 @@ const DisplayUser = () => {
 
   const addUser = async () => {
     const name = nameRef.current.value;
-    const age = ageRef.current.value;
-    const country = countryRef.current.value;
+    const group = groupRef.current.value;
 
     if (
       name.length >= 1 &&
       name.length <= 50 &&
-      country.length >= 1 &&
-      country.length <= 50 &&
-      parseInt(age) !== NaN &&
-      parseInt(age) > 0
+      group.length >= 1 &&
+      group.length <= 50 &&
+
     ) {
       const res = await fetch(import.meta.env.VITE_SERVER + "/hw/users", {
         method: "PUT",
@@ -45,66 +42,25 @@ const DisplayUser = () => {
         body: JSON.stringify({
           name: nameRef.current.value,
           age: ageRef.current.value,
-          country: countryRef.current.value,
+          group: groupRef.current.value,
         }),
       });
       if (res.ok) {
         getUsers();
         nameRef.current.value = "";
         ageRef.current.value = "";
-        countryRef.current.value = "";
+        groupRef.current.value = "";
       } else {
         console.log("error occured");
       }
     }
   };
 
-  //languages
-  const [langs, setLangs] = useState([]);
-  const langRef = useRef();
-
-  const getLangs = async (signal) => {
-    try {
-      const res = await fetch(import.meta.env.VITE_SERVER + "/hw/languages", {
-        signal,
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        setLangs(data);
-      }
-    } catch (error) {
-      if (error.name !== "AbortError") {
-        console.log(error.message);
-      }
-    }
-  };
-
-  const addLang = async () => {
-    const lang = langRef.current.value;
-
-    if (lang.length >= 1 && lang.length <= 20) {
-      const res = await fetch(import.meta.env.VITE_SERVER + "/hw/languages", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          language: langRef.current.value,
-        }),
-      });
-      if (res.ok) {
-        getLangs();
-        langRef.current.value = "";
-      } else {
-        console.log("error occured");
-      }
-    }
-  };
 
   //use effects
   useEffect(() => {
     const controller = new AbortController();
     getUsers(controller.signal);
-    getLangs(controller.signal);
 
     return () => {
       controller.abort();
@@ -121,15 +77,10 @@ const DisplayUser = () => {
           placeholder="name"
           className="col-md-3"
         ></input>
+
         <input
           type="text"
-          ref={ageRef}
-          placeholder="age"
-          className="col-md-2"
-        ></input>
-        <input
-          type="text"
-          ref={countryRef}
+          ref={groupRef}
           placeholder="Group"
           className="col-md-3"
         ></input>
@@ -142,8 +93,6 @@ const DisplayUser = () => {
 
       <div className="row">
         <div className="col-sm-2">name</div>
-        <div className="col-sm-1">age</div>
-        <div className="col-sm-2">Group</div>
         <div className="col-sm-5">Board Games</div>
       </div>
 
@@ -153,8 +102,7 @@ const DisplayUser = () => {
             key={item.id}
             id={item.id}
             name={item.name}
-            age={item.age}
-            country={item.country}
+            group={item.group}
             getUsers={getUsers}
           />
         );

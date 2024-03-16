@@ -1,8 +1,8 @@
 import React from "react";
 import DisplayUser from "../components/DisplayUser";
 
-const Users = () => {
-  return <DisplayUser></DisplayUser>;
+const Users = (props) => {
+  return <DisplayUser getImageUrl={props.getImageUrl}></DisplayUser>;
 };
 
 export default Users;

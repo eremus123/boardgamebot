@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
+import App from "../App";
 
-const DisplayGame = () => {
+const DisplayGame = ({ getImageUrl }) => {
   //users
   const [gameNames, setGameNames] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -57,20 +58,6 @@ const DisplayGame = () => {
    
 
 
-  const getImageUrl = async (gameId) => {
-    try {
-      const response = await fetch(
-        `http://localhost:8080/https://www.boardgamegeek.com/xmlapi2/thing?id=${gameId}`
-      );
-      const text = await response.text();
-      const parser = new DOMParser();
-      const xmlDoc = parser.parseFromString(text, "text/xml");
-      return xmlDoc.getElementsByTagName("thumbnail")[0].textContent;
-    } catch (error) {
-      console.error("Error fetching image:", error);
-      return null;
-    }
-  };
 
   const addGame = async () => {
     try {
