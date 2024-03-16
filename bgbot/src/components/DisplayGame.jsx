@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import App from "../App";
 
-const DisplayGame = ({ getImageUrl }) => {
+const DisplayGame = (props) => {
   //users
   const [gameNames, setGameNames] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -38,7 +38,7 @@ const DisplayGame = ({ getImageUrl }) => {
                  .getElementsByTagName("name")[0]
                  .getAttribute("value");
                const gameId = item.getAttribute("id"); // Extract the game ID
-               const imgUrl = await getImageUrl(gameId);
+               const imgUrl = await props.getImageUrl(gameId);
                return {
                  name: `${i + 1}. ${gameName} (ID: ${gameId})`,
                  id: gameId,
@@ -140,6 +140,7 @@ const DisplayGame = ({ getImageUrl }) => {
               status: "wishlist",
               dateadded: dateAdded,
             },
+            typecast:true,
           }),
         }
       );
