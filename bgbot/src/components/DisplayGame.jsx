@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import App from "../App";
 
 const DisplayGame = (props) => {
   //users

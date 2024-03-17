@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Book from "./Book";
 
-const DisplayUser = () => {
+const DisplayUser = (props) => {
   //users
   const [users, setUsers] = useState([]);
   const nameRef = useRef();
@@ -55,20 +55,100 @@ const DisplayUser = () => {
     }
   };
 
+//owners
+const [owners, setOwners] = useState([]);
+
+const fetchOwners = async () => {
+  try {
+    const res = await fetch(
+      "https://api.airtable.com/v0/appnFG2kbIVgZNH8a/boardgames?fields%5B%5D=owner&filterByFormula=NOT%28%7Bowner%7D%20%3D%20%27%27%29", //max 100 records.......
+      {
+        method: "GET",
+        headers: {
+          Authorization:
+            "Bearer pat4GDBKgsQnZPgiY.c451f2ce36ec83b5deaf0ffae6c9f073e44d9c5ee26d29b71b54edb92d249246", // Correctly set the Authorization header
+          "Content-Type": "application/json", // Optionally set the Content-Type header if needed
+        },
+      }
+    );
+    const data = await res.json();
+    const uniqueOwners = [...new Set(data.records.map((record) => record.fields.owner))]; // Set automatically eliminates duplicates. spread array of owner values into a Set to remove duplicates, and then spread the Set back into an array ([...new Set(ownerValues)]).
+    setOwners(uniqueOwners);
+  } catch (error) {
+    console.error("Error fetching owners:", error);
+  }
+};
+
+const [selectedOwner, setSelectedOwner] = useState("");
+const [ownedGames, setOwnedGames] = useState([]);
+
+const handleOwnerChange = async (event) => {
+  const selectedOwner = event.target.value;
+  setSelectedOwner(selectedOwner);
+  try {
+    // Fetch games owned by the selected owner
+    const res = await fetch(
+      "https://api.airtable.com/v0/appnFG2kbIVgZNH8a/boardgames?maxRecords=100&view=Grid%20view&filterByFormula=AND(owner='"+selectedOwner+"', status='owned')&fields%5B%5D=gameid&fields%5B%5D=gamename", //max 100 records.......
+      {
+        method: "GET",
+        headers: {
+          Authorization:
+            "Bearer pat4GDBKgsQnZPgiY.c451f2ce36ec83b5deaf0ffae6c9f073e44d9c5ee26d29b71b54edb92d249246", // Correctly set the Authorization header
+          "Content-Type": "application/json", // Optionally set the Content-Type header if needed
+        },
+      }
+    );
+    const data = await res.json();
+    setOwnedGames(data.records);
+    console.log(selectedOwner, ownedGames)
+  } catch (error) {
+    console.error("Error fetching owned games:", error);
+  }
+};
+
 
   //use effects
   useEffect(() => {
     const controller = new AbortController();
     getUsers(controller.signal);
+    fetchOwners();
 
     return () => {
       controller.abort();
     };
   }, []);
 
+
+
+
+
   return (
     <div className="container">
       <h1>Users</h1>
+      <h2>Select Owner:</h2>
+      <select value={selectedOwner} onChange={handleOwnerChange}>
+        <option value="">Select Owner</option>
+        {owners.map((owner, index) => (
+          <option key={index} value={owner}>
+            {owner}
+          </option>
+        ))}
+      </select>
+
+      <h2>Owned Games:</h2>
+      <div>
+        {ownedGames.map((game) => (
+          <div key={game.id}>
+            {console.log("Game ID:", game.fields.gameid)}
+            <img src={props.getImageUrl(155821)} alt={game.fields.gamename} />
+            <span>{game.fields.gamename}</span>
+          </div>))}
+        </div>
+
+
+
+
+
       <div className="row">
         <input
           type="text"
