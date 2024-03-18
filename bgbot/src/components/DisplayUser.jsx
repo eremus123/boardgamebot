@@ -40,7 +40,7 @@ const DisplayUser = (props) => {
       const res = await fetch(
         "https://api.airtable.com/v0/appnFG2kbIVgZNH8a/boardgames?maxRecords=100&view=Grid%20view&filterByFormula=AND(owner='" +
           selectedOwner +
-          "', status='owned')&fields%5B%5D=gameid&fields%5B%5D=gamename", //max 100 records.......
+          "', status='owned')&sort%5B0%5D%5Bfield%5D=dateadded&sort%5B0%5D%5Bdirection%5D=desc", //max 100 records.......
         {
           method: "GET",
           headers: {
@@ -77,8 +77,9 @@ const DisplayUser = (props) => {
         gamename={props.selectedGameDetails.gamename}
         owner={props.selectedGameDetails.owner}
         group={props.selectedGameDetails.group}
+        status={props.selectedGameDetails.status}
         recordid= {props.selectedGameDetails.recordid}
-          fetchGames={refreshGames}
+          fetchGames={handleOwnerChange}
           setShowUpdateModal={props.setShowUpdateModal}
         />
       )}
@@ -104,7 +105,7 @@ const DisplayUser = (props) => {
           <div key={game.id} className="row">
             <img
               className="col-sm-1"
-              src={(game.fields.gameid)}
+              src={game.fields.imageurl}
               alt={game.fields.gamename}
             />
 
