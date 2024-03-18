@@ -7,18 +7,32 @@ const Overlay = (props) => {
   const gameidRef = useRef();
   const groupRef = useRef();
   const ownerRef = useRef();
+  const recordId = props.recordid;
+  const newdate = new Date().toISOString().split("T")[0];
 
   const updateGame = async () => {
-    const res = await fetch(import.meta.env.VITE_SERVER + "/hw/users/", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        gameid: gameidRef.current.value,
-        gamename: gamenameRef.current.value,
-        owner: ownerRef.current.value,
-        group: groupRef.current.value,
-      }),
-    });
+    const res = await fetch(
+      "https://api.airtable.com/v0/appnFG2kbIVgZNH8a/boardgames/"+recordId,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization:
+            "Bearer pat4GDBKgsQnZPgiY.c451f2ce36ec83b5deaf0ffae6c9f073e44d9c5ee26d29b71b54edb92d249246",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fields: {
+            gameid: parseInt(gameidRef.current.value),
+            gamename: gamenameRef.current.value,
+            owner: ownerRef.current.value,
+            group: groupRef.current.value,
+            dateadded: newdate,
+          },
+          typecast: true,
+
+        }),
+      }
+    );
     if (res.ok) {
       props.fetchGames();
       props.setShowUpdateModal(false);
@@ -105,6 +119,7 @@ const UpdateModal = (props) => {
           group={props.group}
           owner={props.owner}
           fetchGames={props.fetchGames}
+          recordid={props.recordid}
           setShowUpdateModal={props.setShowUpdateModal}
         ></Overlay>,
         document.querySelector("#modal-root")

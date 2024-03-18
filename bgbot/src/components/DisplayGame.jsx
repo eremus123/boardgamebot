@@ -117,7 +117,6 @@ const DisplayGame = (props) => {
       const gameId = gameIdMatch ? gameIdMatch[1] : null; // Extract the game ID
       // Get the current date/time in ISO format
       const dateAdded = new Date().toISOString().split("T")[0];
-      console.log(dateAdded);
       //Store only the game Name:
       const gameNameMatch = selectedGameName.match(/^\d+\.\s*(.*?)\s*\(/);
       const gameName = gameNameMatch ? gameNameMatch[1] : selectedGameName; // Use the extracted game name or the original string if no match
@@ -204,6 +203,7 @@ const DisplayGame = (props) => {
         gamename={selectedGameDetails.gamename}
         owner={selectedGameDetails.owner}
         group={selectedGameDetails.group}
+        recordid= {selectedGameDetails.recordid}
           fetchGames={fetchGames}
           setShowUpdateModal={setShowUpdateModal}
         />
@@ -293,8 +293,12 @@ const DisplayGame = (props) => {
           <button className="col-sm-1" onClick={() => props.delGame(game.id)}>
             Delete
           </button>
-          <button className="col-sm-1" onClick={() => { setSelectedGameDetails(game.fields);
-;setShowUpdateModal(true);}}>
+          <button className="col-sm-1" onClick={() => { 
+ setSelectedGameDetails({
+  ...game.fields,
+  recordid: game.id // Include the record ID here
+});            
+setShowUpdateModal(true);}}>
           Update
         </button>
         </div>
