@@ -3,23 +3,24 @@ import ReactDOM from "react-dom";
 import styles from "./Modal.module.css";
 
 const Overlay = (props) => {
-  const nameRef = useRef();
-  const ageRef = useRef();
-  const countryRef = useRef();
+  const gamenameRef = useRef();
+  const gameidRef = useRef();
+  const groupRef = useRef();
+  const ownerRef = useRef();
 
-  const updateUser = async () => {
+  const updateGame = async () => {
     const res = await fetch(import.meta.env.VITE_SERVER + "/hw/users/", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        user_id: props.id,
-        name: nameRef.current.value,
-        age: ageRef.current.value,
-        country: countryRef.current.value,
+        gameid: gameidRef.current.value,
+        gamename: gamenameRef.current.value,
+        owner: ownerRef.current.value,
+        group: groupRef.current.value,
       }),
     });
     if (res.ok) {
-      props.getUsers();
+      props.fetchGames();
       props.setShowUpdateModal(false);
     }
   };
@@ -31,42 +32,53 @@ const Overlay = (props) => {
         <br />
         <div className="row">
           <div className="col-md-3"></div>
-          <div className="col-md-3">Name</div>
+          <div className="col-md-3">Game Name</div>
           <input
-            ref={nameRef}
+            ref={gamenameRef}
             type="text"
             className="col-md-3"
-            defaultValue={props.name}
+            defaultValue={props.gamename}
           />
           <div className="col-md-3"></div>
         </div>
         <div className="row">
           <div className="col-md-3"></div>
-          <div className="col-md-3">Age</div>
+          <div className="col-md-3">gameid</div>
           <input
-            ref={ageRef}
+            ref={gameidRef}
             type="text"
             className="col-md-3"
-            defaultValue={props.age}
+            defaultValue={props.gameid}
           />
           <div className="col-md-3"></div>
         </div>
         <div className="row">
           <div className="col-md-3"></div>
-          <div className="col-md-3">Country</div>
+          <div className="col-md-3">group</div>
           <input
-            ref={countryRef}
+            ref={groupRef}
             type="text"
             className="col-md-3"
-            defaultValue={props.country}
+            defaultValue={props.group}
           />
           <div className="col-md-3"></div>
+        <div className="row">
+          <div className="col-md-3"></div>
+          <div className="col-md-3">owner</div>
+          <input
+            ref={ownerRef}
+            type="text"
+            className="col-md-3"
+            defaultValue={props.owner}
+          />
+          <div className="col-md-3"></div>
+        </div>
 
           <br />
 
           <div className="row">
             <div className="col-md-3"></div>
-            <button onClick={() => updateUser(props.id)} className="col-md-3">
+            <button onClick={() => updateGame(props.recordid)} className="col-md-3">
               update
             </button>
             <button
@@ -88,11 +100,11 @@ const UpdateModal = (props) => {
     <>
       {ReactDOM.createPortal(
         <Overlay
-          id={props.id}
-          name={props.name}
-          age={props.age}
-          country={props.country}
-          getUsers={props.getUsers}
+          gameid={props.gameid}
+          gamename={props.gamename}
+          group={props.group}
+          owner={props.owner}
+          fetchGames={props.fetchGames}
           setShowUpdateModal={props.setShowUpdateModal}
         ></Overlay>,
         document.querySelector("#modal-root")

@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
+import UpdateModal from "./UpdateModal";
+
 
 const DisplayGame = (props) => {
   //users
@@ -7,8 +9,11 @@ const DisplayGame = (props) => {
   const [selectedGameName, setSelectedGameName] = useState("");
   const [userName, setUserName] = useState("");
   const [userGroup, setUserGroup] = useState("");
-  const searchRef = useRef();
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [selectedGameDetails, setSelectedGameDetails] = useState({}); //for updatemodal only
 
+
+  const searchRef = useRef();
   const abortController = new AbortController();
 
   const getGame = async () => {
@@ -191,7 +196,19 @@ const DisplayGame = (props) => {
   }, []);
 
   return (
+    
     <div className="container">
+      {showUpdateModal && (
+        <UpdateModal
+        gameid={selectedGameDetails.gameid}
+        gamename={selectedGameDetails.gamename}
+        owner={selectedGameDetails.owner}
+        group={selectedGameDetails.group}
+          fetchGames={fetchGames}
+          setShowUpdateModal={setShowUpdateModal}
+        />
+      )}
+
       <h1>Search or Add New Board Games: </h1>
       <br />
       <form>
@@ -260,7 +277,7 @@ const DisplayGame = (props) => {
       <h2>Recently Added Games:</h2>
 
       <div className="row">
-        <div className="col-sm-6">boardgame</div>
+        <div className="col-sm-5">boardgame</div>
         <div className="col-sm-1">gameid</div>
         <div className="col-sm-1">owner</div>
         <div className="col-sm-2">dateadded</div>
@@ -268,7 +285,7 @@ const DisplayGame = (props) => {
       </div>
       {recentGames.map((game) => (
         <div key={game.id} className="row">
-          <div className="col-sm-6">{game.fields.gamename}</div>
+          <div className="col-sm-5">{game.fields.gamename}</div>
           <div className="col-sm-1">{game.fields.gameid}</div>
           <div className="col-sm-1">{game.fields.owner}</div>
           <div className="col-sm-2">{game.fields.dateadded}</div>
@@ -276,6 +293,10 @@ const DisplayGame = (props) => {
           <button className="col-sm-1" onClick={() => props.delGame(game.id)}>
             Delete
           </button>
+          <button className="col-sm-1" onClick={() => { setSelectedGameDetails(game.fields);
+;setShowUpdateModal(true);}}>
+          Update
+        </button>
         </div>
       ))}
     </div>
