@@ -32,7 +32,7 @@ const Groups = () => {
 
   return (
     <div className="container">
-  <h2>Your Group owns the following games:</h2>
+  <h2>Your Group ({params.id}) owns the following games:</h2>
   <div className="row">
         <div className="col-sm-1">image</div>
         <div className="col-sm-6">boardgame</div>
