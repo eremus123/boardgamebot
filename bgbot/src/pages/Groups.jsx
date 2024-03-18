@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import Search from "../components/Search";
 
 const Groups = () => {
   const params = useParams();
@@ -32,7 +33,10 @@ const Groups = () => {
 
   return (
     <div className="container">
-  <h2>Your Group ({params.id}) owns the following games:</h2>
+    <h2>Look for a particular game that your group ({params.id}) owns:</h2>
+    <Search></Search>
+
+  <h2>Browse through all the games that your group ({params.id}) owns:</h2>
   <div className="row">
         <div className="col-sm-1">image</div>
         <div className="col-sm-6">boardgame</div>
