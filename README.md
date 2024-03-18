@@ -18,8 +18,8 @@ See the top 50 hottest games on BGG right now!
 ### Group Screen:
 Select the group to view games that the group owns:
 <img src="https://imgur.com/rhN0gwy.jpeg">
-Search within your group, or just browse the games that your group owns:
-<img src="https://imgur.com/rhN0gwy.jpeg">
+Search/browse the games within your group:
+<img src="https://imgur.com/7ifTC2c.jpeg">
 
 ### Users Screen:
 Select from the existing users to view all games of a particular user (currently limited to 100 games)
