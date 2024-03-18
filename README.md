@@ -47,9 +47,8 @@ How do you know which of your friends own 'that game'?
 
 # Acknowledgements & References
 
-- Airtable API Docs: https://airtable.com/appnFG2kbIVgZNH8a/api/docs#curl/table:boardgames:update
+- Airtable API Docs: https://airtable.com/appnFG2kbIVgZNH8a/api/docs#curl/table:boardgames
 - BGG XML API2: https://boardgamegeek.com/wiki/page/BGG_XML_API2
 - BGG XML API2 Guide: https://www.tayloraliss.com/bggapi/index.html
--
 - Debugging: ChatGPT 3.5
 
