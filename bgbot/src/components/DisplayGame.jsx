@@ -9,8 +9,7 @@ const DisplayGame = (props) => {
   const [selectedGameName, setSelectedGameName] = useState("");
   const [userName, setUserName] = useState("");
   const [userGroup, setUserGroup] = useState("");
-  const [showUpdateModal, setShowUpdateModal] = useState(false);
-  const [selectedGameDetails, setSelectedGameDetails] = useState({}); //for updatemodal only
+
 
 
   const searchRef = useRef();
@@ -104,6 +103,8 @@ const DisplayGame = (props) => {
         setUserGroup("");
         searchRef.current.value = "";
         setShowModal(false);
+        window.location.reload();//refresh to update the UI
+
       }
     } catch (error) {
       if (error.name !== "AbortError") {
@@ -154,6 +155,8 @@ const DisplayGame = (props) => {
         setUserGroup("");
         searchRef.current.value = "";
         setShowModal(false);
+        window.location.reload();//refresh to update the UI
+
       }
     } catch (error) {
       if (error.name !== "AbortError") {
@@ -199,15 +202,15 @@ const DisplayGame = (props) => {
   return (
     
     <div className="container">
-      {showUpdateModal && (
+      {props.showUpdateModal && (
         <UpdateModal
-        gameid={selectedGameDetails.gameid}
-        gamename={selectedGameDetails.gamename}
-        owner={selectedGameDetails.owner}
-        group={selectedGameDetails.group}
-        recordid= {selectedGameDetails.recordid}
+        gameid={props.selectedGameDetails.gameid}
+        gamename={props.selectedGameDetails.gamename}
+        owner={props.selectedGameDetails.owner}
+        group={props.selectedGameDetails.group}
+        recordid= {props.selectedGameDetails.recordid}
           fetchGames={fetchGames}
-          setShowUpdateModal={setShowUpdateModal}
+          setShowUpdateModal={props.setShowUpdateModal}
         />
       )}
 
@@ -296,11 +299,11 @@ const DisplayGame = (props) => {
             Delete
           </button>
           <button className="col-sm-1" onClick={() => { 
- setSelectedGameDetails({
+ props.setSelectedGameDetails({
   ...game.fields,
   recordid: game.id // Include the record ID here
 });            
-setShowUpdateModal(true);}}>
+props.setShowUpdateModal(true);}}>
           Update
         </button>
         </div>

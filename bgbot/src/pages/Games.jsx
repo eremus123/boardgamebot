@@ -6,6 +6,10 @@ const Games = (props) => {
     <DisplayGame
       getImageUrl={props.getImageUrl}
       delGame={props.delGame}
+      showUpdateModal={props.showUpdateModal}
+      setShowUpdateModal={props.setShowUpdateModal}
+      selectedGameDetails={props.selectedGameDetails}
+      setSelectedGameDetails={props.setSelectedGameDetails}
     ></DisplayGame>
   );
 };

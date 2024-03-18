@@ -52,27 +52,11 @@ const DisplayUser = (props) => {
       );
       const data = await res.json();
       setOwnedGames(data.records);
-      console.log(selectedOwner, ownedGames);
     } catch (error) {
       console.error("Error fetching owned games:", error);
     }
   };
 
-  const getImage = async (gameId) => {
-    try {
-      const response = await fetch(
-        `http://localhost:8080/https://www.boardgamegeek.com/xmlapi2/thing?id=${gameId}`
-      );
-      const text = await response.text();
-      const parser = new DOMParser();
-      const xmlDoc = parser.parseFromString(text, "text/xml");
-      console.log(xmlDoc.getElementsByTagName("thumbnail")[0].textContent);
-      return xmlDoc.getElementsByTagName("thumbnail")[0].textContent;
-    } catch (error) {
-      console.error("Error fetching image:", error);
-      return null;
-    }
-  };
 
   //use effects
   useEffect(() => {
@@ -86,6 +70,18 @@ const DisplayUser = (props) => {
 
   return (
     <div className="container">
+
+{props.showUpdateModal && (
+        <UpdateModal
+        gameid={props.selectedGameDetails.gameid}
+        gamename={props.selectedGameDetails.gamename}
+        owner={props.selectedGameDetails.owner}
+        group={props.selectedGameDetails.group}
+        recordid= {props.selectedGameDetails.recordid}
+          fetchGames={refreshGames}
+          setShowUpdateModal={props.setShowUpdateModal}
+        />
+      )}
       <h1>Users</h1>
       <h2>Select Owner:</h2>
       <select value={selectedOwner} onChange={handleOwnerChange}>
@@ -108,7 +104,7 @@ const DisplayUser = (props) => {
           <div key={game.id} className="row">
             <img
               className="col-sm-1"
-              src={getImage(game.fields.gameid)}
+              src={(game.fields.gameid)}
               alt={game.fields.gamename}
             />
 
@@ -118,6 +114,12 @@ const DisplayUser = (props) => {
             <button className="col-sm-1" onClick={() => props.delGame(game.id)}>
               Delete
             </button>
+            <button className="col-sm-1" onClick={() => { 
+ props.setSelectedGameDetails({
+  ...game.fields,
+  recordid: game.id // Include the record ID here
+});            
+props.setShowUpdateModal(true);}}>Update</button>
           </div>
         ))}
       </div>

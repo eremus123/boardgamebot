@@ -1,6 +1,5 @@
 import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-// import Main from "./pages/Main";
 const Main = React.lazy(() => import("./pages/Main"));
 const Groups = React.lazy(() => import("./pages/Groups"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
@@ -8,15 +7,18 @@ const List = React.lazy(() => import("./pages/List"));
 const Users = React.lazy(() => import("./pages/Users"));
 const Games = React.lazy(() => import("./pages/Games"));
 
-// import Members from "./pages/Members";
-// import NotFound from "./pages/NotFound";
 import NavBar from "./components/NavBar";
-// import List from "./pages/List";
+
 import { useState, useEffect } from "react";
-import useFetch2 from "./hooks/UseFetch2";
 import { Suspense } from "react";
 
 function App() {
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [selectedGameDetails, setSelectedGameDetails] = useState({}); //for updatemodal only
+
+
+
+
   const getImageUrl = async (gameId) => {
     try {
       const response = await fetch(
@@ -49,8 +51,7 @@ function App() {
       );
       if (res.ok) {
         console.log("Game deleted successfully");
-        //refetch the recent games to update the UI
-        fetchGames();
+        window.location.reload();//refresh to update the UI
       } else {
         console.error("Failed to delete game", await response.text());
       }
@@ -58,30 +59,11 @@ function App() {
       console.error("Error deleting game:", error);
     }
   };
-  const [recentGames, setRecentGames] = useState([]);
-  const fetchGames = async () => {
-    try {
-      const res = await fetch(
-        "https://api.airtable.com/v0/appnFG2kbIVgZNH8a/boardgames?maxRecords=30&view=Grid%20view&sort%5B0%5D%5Bfield%5D=dateadded&sort%5B0%5D%5Bdirection%5D=desc",
-        {
-          method: "GET",
-          headers: {
-            Authorization:
-              "Bearer pat4GDBKgsQnZPgiY.c451f2ce36ec83b5deaf0ffae6c9f073e44d9c5ee26d29b71b54edb92d249246",
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (res.ok) {
-        const data = await res.json();
-        setRecentGames(data.records);
-      }
-    } catch (error) {
-      if (error.name !== "AbortError") {
-        console.log(error.message);
-      }
-    }
-  };
+
+
+
+
+
   return (
     <>
       <Suspense fallback={<h1>loading...</h1>}>
@@ -93,11 +75,17 @@ function App() {
           <Route path="list" element={<List />} />
           <Route
             path="games"
-            element={<Games getImageUrl={getImageUrl} delGame={delGame} />}
+            element={<Games getImageUrl={getImageUrl} delGame={delGame}         showUpdateModal={showUpdateModal}
+            setShowUpdateModal={setShowUpdateModal}
+            selectedGameDetails={selectedGameDetails}
+            setSelectedGameDetails={setSelectedGameDetails}/>}
           />
           <Route
             path="users"
-            element={<Users getImageUrl={getImageUrl} delGame={delGame} />}
+            element={<Users getImageUrl={getImageUrl} delGame={delGame}         showUpdateModal={showUpdateModal}
+            setShowUpdateModal={setShowUpdateModal}
+            selectedGameDetails={selectedGameDetails}
+            setSelectedGameDetails={setSelectedGameDetails}/>}
           />
 
           <Route path="*" element={<NotFound />} />
