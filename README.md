@@ -1,5 +1,5 @@
 # boardgamebot
-Does your boardgame collection look like this: <img src="https://i.imgur.com/h4CQ7Vy.jpeg"><img src="https://i.imgur.com/sj35Hq5.jpeg"><img src="https://i.imgur.com/reO4M8w.jpeg"><img src="https://i.imgur.com/KtNjwIg.jpeg">
+Does your boardgame collection look like this: <img src="https://i.imgur.com/KtNjwIg.jpeg"><img src="https://i.imgur.com/sj35Hq5.jpeg"><img src="https://i.imgur.com/reO4M8w.jpeg"><img src="https://i.imgur.com/h4CQ7Vy.jpeg">
 
 Or even worse, like this:
 <img src="https://i.imgur.com/fCeUffi.jpeg"><img src="https://i.imgur.com/UxCnaTS.jpeg">
