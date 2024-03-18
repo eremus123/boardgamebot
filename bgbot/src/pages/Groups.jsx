@@ -8,9 +8,7 @@ const Groups = () => {
     try {
       // Fetch games owned by the selected group
       const res = await fetch(
-        "https://api.airtable.com/v0/appnFG2kbIVgZNH8a/boardgames?maxRecords=100&view=Grid%20view&filterByFormula=AND(group='" +
-        params.id +
-          "', status='owned')&sort%5B0%5D%5Bfield%5D=dateadded&sort%5B0%5D%5Bdirection%5D=desc", //max 100 records.......
+        "https://api.airtable.com/v0/appnFG2kbIVgZNH8a/boardgames?view=Grid%20view&sort%5B0%5D%5Bfield%5D=dateadded&maxRecords=100&filterByFormula=AND(OR(FIND('"+params.id+"', {group})), status='owned')&sort%5B0%5D%5Bdirection%5D=desc", //max 100 records.......
         {
           method: "GET",
           headers: {
