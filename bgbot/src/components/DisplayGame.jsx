@@ -9,54 +9,50 @@ const DisplayGame = (props) => {
   const [userGroup, setUserGroup] = useState("");
   const searchRef = useRef();
 
-
   const abortController = new AbortController();
-
 
   const getGame = async () => {
     event.preventDefault(); // Prevent the default form submission behavior
     const searchgame = searchRef.current.value;
     setGameNames([]);
-   
+
     try {
-       const req = new XMLHttpRequest();
-       req.open(
-         "GET",
-         "http://localhost:8080/https://www.boardgamegeek.com/xmlapi2/search?type=boardgame,boardgameexpansion&query=" +
-           searchgame,
-         true
-       );
-       req.onload = async () => {
-         if (req.status === 200) {
-           const parser = new DOMParser();
-           const xmlDoc = parser.parseFromString(req.responseText, "text/xml");
-           const items = xmlDoc.getElementsByTagName("item");
-           const names = await Promise.all(
-             Array.from(items).map(async (item, i) => {
-               const gameName = item
-                 .getElementsByTagName("name")[0]
-                 .getAttribute("value");
-               const gameId = item.getAttribute("id"); // Extract the game ID
-               const imgUrl = await props.getImageUrl(gameId);
-               return {
-                 name: `${i + 1}. ${gameName} (ID: ${gameId})`,
-                 id: gameId,
-                 imgUrl: imgUrl,
-               };
-             })
-           );
-   
-           setGameNames(names);
-         }
-       };
-       req.send(null);
+      const req = new XMLHttpRequest();
+      req.open(
+        "GET",
+        "http://localhost:8080/https://www.boardgamegeek.com/xmlapi2/search?type=boardgame,boardgameexpansion&query=" +
+          searchgame,
+        true
+      );
+      req.onload = async () => {
+        if (req.status === 200) {
+          const parser = new DOMParser();
+          const xmlDoc = parser.parseFromString(req.responseText, "text/xml");
+          const items = xmlDoc.getElementsByTagName("item");
+          const names = await Promise.all(
+            Array.from(items).map(async (item, i) => {
+              const gameName = item
+                .getElementsByTagName("name")[0]
+                .getAttribute("value");
+              const gameId = item.getAttribute("id"); // Extract the game ID
+              console.log(typeof gameId);
+              const imgUrl = await props.getImageUrl(gameId);
+              return {
+                name: `${i + 1}. ${gameName} (ID: ${gameId})`,
+                id: gameId,
+                imgUrl: imgUrl,
+              };
+            })
+          );
+
+          setGameNames(names);
+        }
+      };
+      req.send(null);
     } catch (error) {
-       console.error(error.message);
+      console.error(error.message);
     }
-   };
-   
-
-
+  };
 
   const addGame = async () => {
     try {
@@ -88,7 +84,8 @@ const DisplayGame = (props) => {
               plays: 0,
               status: "owned",
               dateadded: dateAdded,
-            },typecast:true,
+            },
+            typecast: true,
           }),
         }
       );
@@ -139,7 +136,7 @@ const DisplayGame = (props) => {
               status: "wishlist",
               dateadded: dateAdded,
             },
-            typecast:true,
+            typecast: true,
           }),
         }
       );
@@ -169,7 +166,7 @@ const DisplayGame = (props) => {
           headers: {
             Authorization:
               "Bearer pat4GDBKgsQnZPgiY.c451f2ce36ec83b5deaf0ffae6c9f073e44d9c5ee26d29b71b54edb92d249246",
-            "Content-Type": "application/json", 
+            "Content-Type": "application/json",
           },
         }
       );
@@ -184,32 +181,6 @@ const DisplayGame = (props) => {
     }
   };
 
-  const delGame = async (recordId) => {
-    try {
-      const res = await fetch(
-        `https://api.airtable.com/v0/appnFG2kbIVgZNH8a/boardgames/${recordId}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization:
-              "Bearer pat4GDBKgsQnZPgiY.c451f2ce36ec83b5deaf0ffae6c9f073e44d9c5ee26d29b71b54edb92d249246", 
-
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (res.ok) {
-        console.log("Game deleted successfully");
-        //refetch the recent games to update the UI
-        fetchGames();
-      } else {
-        console.error("Failed to delete game", await response.text());
-      }
-    } catch (error) {
-      console.error("Error deleting game:", error);
-    }
-  };
-
   //use effects
   useEffect(() => {
     fetchGames();
@@ -217,9 +188,8 @@ const DisplayGame = (props) => {
       // Abort all ongoing fetch requests when the component unmounts
       abortController.abort();
     };
- }, []);
+  }, []);
 
- 
   return (
     <div className="container">
       <h1>Search or Add New Board Games: </h1>
@@ -268,30 +238,29 @@ const DisplayGame = (props) => {
         )}
         <br />
         {gameNames.map((game, index) => (
-        <div key={index}>
-    <img src={game.imgUrl} alt={game.name} />
-    <span>{game.name}</span>
-    <button
-      className="col-sm-1"
-      onClick={() => {
-        console.log(game.name);
-        console.log(game.imgUrl)
-        setSelectedGameName(game.name);
-        setShowModal(true);
-      }}
-    >
-      Add Game
-    </button>
- </div>
-))}
-
+          <div key={index}>
+            <img src={game.imgUrl} alt={game.name} />
+            <span>{game.name}</span>
+            <button
+              className="col-sm-1"
+              onClick={() => {
+                console.log(game.name);
+                console.log(game.imgUrl);
+                setSelectedGameName(game.name);
+                setShowModal(true);
+              }}
+            >
+              Add Game
+            </button>
+          </div>
+        ))}
       </div>
       <br />
       <br />
       <h2>Recently Added Games:</h2>
 
       <div className="row">
-        <div className="col-sm-5">boardgame</div>
+        <div className="col-sm-6">boardgame</div>
         <div className="col-sm-1">gameid</div>
         <div className="col-sm-1">owner</div>
         <div className="col-sm-2">dateadded</div>
@@ -299,13 +268,13 @@ const DisplayGame = (props) => {
       </div>
       {recentGames.map((game) => (
         <div key={game.id} className="row">
-          <div className="col-sm-5">{game.fields.gamename}</div>
+          <div className="col-sm-6">{game.fields.gamename}</div>
           <div className="col-sm-1">{game.fields.gameid}</div>
           <div className="col-sm-1">{game.fields.owner}</div>
           <div className="col-sm-2">{game.fields.dateadded}</div>
           <div className="col-sm-1">{game.fields.status}</div>
-          <button className="col-sm-2" onClick={() => delGame(game.id)}>
-            Delete Game
+          <button className="col-sm-1" onClick={() => props.delGame(game.id)}>
+            Delete
           </button>
         </div>
       ))}
