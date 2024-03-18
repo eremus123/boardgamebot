@@ -1,7 +1,14 @@
 # boardgamebot
-Does your boardgame collection look like this:<img src="https://i.imgur.com/XqISViz.jpeg"> 
+Does your boardgame collection look like this: <img src="https://i.imgur.com/h4CQ7Vy.jpeg"><img src="https://i.imgur.com/sj35Hq5.jpeg"><img src="https://i.imgur.com/reO4M8w.jpeg"><img src="https://i.imgur.com/KtNjwIg.jpeg">
 
-How do you know which of your friends own 'that game'?
+Or even worse, like this:
+<img src="https://i.imgur.com/fCeUffi.jpeg"><img src="https://i.imgur.com/UxCnaTS.jpeg">
+
+Completely overwhelmed by the vast selection out there, or just trying to get started to build your collection but don't want to overlap with games that your friends already own? How do you even know which of your friends own 'that game'? 
+
+If only there was an easier way to keep track of not only your own collection, but also the groups that you often play with.... 
+
+
 
 # Screenshots
 ### Welcome Screen:
@@ -40,13 +47,12 @@ How do you know which of your friends own 'that game'?
 # Next Steps
 
 - Search within your group to see if anyone owns the game
+- Include ratings in the game search feature
 - Login directly to BGG to save to your own collections and stats
 - Keep track of the number of plays for each game that you own.
 - Suggest recommended games that you might like based on your own collection
-- Support for multiple/more groups
 - Don't know which game to play? Introducing a randomizer to pick a game that your group owns!
 - Support for more than 100 games displayed
-
 
 
 # Acknowledgements & References
