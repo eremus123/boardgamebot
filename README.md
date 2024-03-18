@@ -43,7 +43,10 @@ How do you know which of your friends own 'that game'?
 - Login directly to BGG to save to your own collections and stats
 - Keep track of the number of plays for each game that you own.
 - Suggest recommended games that you might like based on your own collection
-- Support for more number of groups
+- Support for multiple/more groups
+- Don't know which game to play? Introducing a randomizer to pick a game that your group owns!
+- Support for more than 100 games displayed
+
 
 
 # Acknowledgements & References
