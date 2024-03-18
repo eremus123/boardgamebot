@@ -7,6 +7,7 @@ const Overlay = (props) => {
   const gameidRef = useRef();
   const groupRef = useRef();
   const ownerRef = useRef();
+  const statusRef = useRef()
   const recordId = props.recordid;
   const newdate = new Date().toISOString().split("T")[0];
 
@@ -26,6 +27,7 @@ const Overlay = (props) => {
             gamename: gamenameRef.current.value,
             owner: ownerRef.current.value,
             group: groupRef.current.value,
+            status: statusRef.current.value,
             dateadded: newdate,
           },
           typecast: true,
@@ -87,6 +89,17 @@ const Overlay = (props) => {
           />
           <div className="col-md-3"></div>
         </div>
+        <div className="row">
+          <div className="col-md-3"></div>
+          <div className="col-md-3">status</div>
+          <input
+            ref={statusRef}
+            type="text"
+            className="col-md-3"
+            defaultValue={props.status}
+          />
+          <div className="col-md-3"></div>
+        </div>
 
           <br />
 
@@ -118,6 +131,7 @@ const UpdateModal = (props) => {
           gamename={props.gamename}
           group={props.group}
           owner={props.owner}
+          status={props.status}
           fetchGames={props.fetchGames}
           recordid={props.recordid}
           setShowUpdateModal={props.setShowUpdateModal}

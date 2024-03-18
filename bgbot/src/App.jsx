@@ -35,6 +35,9 @@ function App() {
     }
   };
 
+
+  
+
   const delGame = async (recordId) => {
     try {
       const res = await fetch(

@@ -208,6 +208,7 @@ const DisplayGame = (props) => {
         gamename={props.selectedGameDetails.gamename}
         owner={props.selectedGameDetails.owner}
         group={props.selectedGameDetails.group}
+        status={props.selectedGameDetails.status}
         recordid= {props.selectedGameDetails.recordid}
           fetchGames={fetchGames}
           setShowUpdateModal={props.setShowUpdateModal}
