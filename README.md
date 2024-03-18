@@ -15,7 +15,6 @@ If only there was an easier way to keep track of not only your own collection, b
 See the top 50 hottest games on BGG right now!
 <img src="https://i.imgur.com/w2rJoVp.jpeg">
 
-
 ### Group Screen:
 Select the group to view games that the group owns:
 <img src="https://imgur.com/rhN0gwy.jpeg">
@@ -54,14 +53,14 @@ After Searching for a game, fill in the details and add it to your wishlist or t
 
 # Next Steps
 
-- Search within your group to see if anyone owns the game
 - Include ratings in the game search feature / Allow for your own ratings
 - Login directly to BGG to save to your own collections and stats
 - Keep track of the number of plays for each game that you own.
 - Suggest recommended games that you might like based on your own collection
 - Don't know which game to play? Introducing a randomizer to pick a game that your group owns!
 - Support for more than 100 games displayed
-- Handle duplicates between 
+- Handle duplicate games / Check if game already exists before adding into collection
+- Enhance UI/UX with nicer loading animations/interfaces
 
 
 # Acknowledgements & References
