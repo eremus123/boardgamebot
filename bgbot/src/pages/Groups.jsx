@@ -34,7 +34,7 @@ const Groups = () => {
   return (
     <div className="container">
     <h2>Look for a particular game that your group ({params.id}) owns:</h2>
-    <Search></Search>
+    <Search group={params.id}></Search>
 
   <h2>Browse through all the games that your group ({params.id}) owns:</h2>
   <div className="row">

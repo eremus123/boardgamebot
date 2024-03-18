@@ -7,7 +7,7 @@ const Search = (props) => {
  const searchGames = async () => {
     try {
         const res = await fetch(
-            "https://api.airtable.com/v0/appnFG2kbIVgZNH8a/boardgames?filterByFormula=AND(FIND('catan', LOWER({gamename})) > 0, OR(FIND('b', {group})))", //max 100 records.......
+            "https://api.airtable.com/v0/appnFG2kbIVgZNH8a/boardgames?filterByFormula=AND(FIND('"+gameName+"', LOWER({gamename})) > 0, OR(FIND('"+props.group+"', {group})))", //max 100 records.......
             {
               method: "GET",
               headers: {
