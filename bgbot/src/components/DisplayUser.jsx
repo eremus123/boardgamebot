@@ -9,7 +9,7 @@ const DisplayUser = (props) => {
   const fetchOwners = async () => {
     try {
       const res = await fetch(
-        "https://api.airtable.com/v0/appnFG2kbIVgZNH8a/boardgames?fields%5B%5D=owner&filterByFormula=NOT%28%7Bowner%7D%20%3D%20%27%27%29", //max 100 records.......
+        "https://api.airtable.com/v0/appnFG2kbIVgZNH8a/boardgames?fields%5B%5D=owner&filterByFormula=NOT%28%7Bowner%7D%20%3D%20%27%27%29&sort%5B0%5D%5Bfield%5D=dateadded&sort%5B0%5D%5Bdirection%5D=desc", //max 100 records.......
         {
           method: "GET",
           headers: {
