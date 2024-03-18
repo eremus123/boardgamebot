@@ -33,10 +33,10 @@ const Groups = () => {
 
   return (
     <div className="container">
-    <h2>Look for a particular game that your group ({params.id}) owns:</h2>
+    <h2>Search for a game within group {params.id}:</h2>
     <Search group={params.id}></Search>
 
-  <h2>Browse through all the games that your group ({params.id}) owns:</h2>
+  <h2>Browse through all games in group ({params.id}):</h2>
   <div className="row">
         <div className="col-sm-1">image</div>
         <div className="col-sm-6">boardgame</div>

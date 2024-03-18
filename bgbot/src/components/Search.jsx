@@ -39,7 +39,7 @@ const Search = (props) => {
       <button onClick={searchGames}>Search</button>
       <ul>
         {results.map((result, index) => (
-          <li key={index}>
+          <li key={index}><img src={result.fields.imageurl} />
             {`${result.fields.gamename} (${result.fields.status} by ${result.fields.owner})`}
           </li>
         ))}
