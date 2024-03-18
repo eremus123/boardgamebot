@@ -40,7 +40,6 @@ const DisplayGame = (props) => {
                 .getElementsByTagName("name")[0]
                 .getAttribute("value");
               const gameId = item.getAttribute("id"); // Extract the game ID
-              console.log(typeof gameId);
               const imgUrl = await props.getImageUrl(gameId);
               return {
                 name: `${i + 1}. ${gameName} (ID: ${gameId})`,
@@ -64,6 +63,8 @@ const DisplayGame = (props) => {
       // Extract the game ID from the selectedGameName string
       const gameIdMatch = selectedGameName.match(/\(ID: (\d+)\)/);
       const gameId = gameIdMatch ? gameIdMatch[1] : null; // Extract the game ID
+      const selectedGame = gameNames.find(game => game.name === selectedGameName);
+      const imgUrl = selectedGame ? selectedGame.imgUrl : ''; // Extract the imgUrl from the selected game
       // Get the current date/time in ISO format
       const dateAdded = new Date().toISOString().split("T")[0];
       console.log(dateAdded);
@@ -89,6 +90,7 @@ const DisplayGame = (props) => {
               plays: 0,
               status: "owned",
               dateadded: dateAdded,
+              imageurl: imgUrl
             },
             typecast: true,
           }),
