@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import UpdateModal from "./UpdateModal";
 
-
 const DisplayUser = (props) => {
-  
   //owners
   const [owners, setOwners] = useState([]);
   const fetchOwners = async () => {
@@ -13,9 +11,8 @@ const DisplayUser = (props) => {
         {
           method: "GET",
           headers: {
-            Authorization:
-              "Bearer pat4GDBKgsQnZPgiY.c451f2ce36ec83b5deaf0ffae6c9f073e44d9c5ee26d29b71b54edb92d249246", 
-            "Content-Type": "application/json", 
+            Authorization: import.meta.env.VITE_TOKEN,
+            "Content-Type": "application/json",
           },
         }
       );
@@ -44,9 +41,8 @@ const DisplayUser = (props) => {
         {
           method: "GET",
           headers: {
-            Authorization:
-              "Bearer pat4GDBKgsQnZPgiY.c451f2ce36ec83b5deaf0ffae6c9f073e44d9c5ee26d29b71b54edb92d249246", 
-            "Content-Type": "application/json", 
+            Authorization: import.meta.env.VITE_TOKEN,
+            "Content-Type": "application/json",
           },
         }
       );
@@ -56,7 +52,6 @@ const DisplayUser = (props) => {
       console.error("Error fetching owned games:", error);
     }
   };
-
 
   //use effects
   useEffect(() => {
@@ -70,15 +65,14 @@ const DisplayUser = (props) => {
 
   return (
     <div className="container">
-
-{props.showUpdateModal && (
+      {props.showUpdateModal && (
         <UpdateModal
-        gameid={props.selectedGameDetails.gameid}
-        gamename={props.selectedGameDetails.gamename}
-        owner={props.selectedGameDetails.owner}
-        group={props.selectedGameDetails.group}
-        status={props.selectedGameDetails.status}
-        recordid= {props.selectedGameDetails.recordid}
+          gameid={props.selectedGameDetails.gameid}
+          gamename={props.selectedGameDetails.gamename}
+          owner={props.selectedGameDetails.owner}
+          group={props.selectedGameDetails.group}
+          status={props.selectedGameDetails.status}
+          recordid={props.selectedGameDetails.recordid}
           fetchGames={handleOwnerChange}
           setShowUpdateModal={props.setShowUpdateModal}
         />
@@ -115,19 +109,21 @@ const DisplayUser = (props) => {
             <button className="col-sm-1" onClick={() => props.delGame(game.id)}>
               Delete
             </button>
-            <button className="col-sm-1" onClick={() => { 
- props.setSelectedGameDetails({
-  ...game.fields,
-  recordid: game.id // Include the record ID here
-});            
-props.setShowUpdateModal(true);}}>Update</button>
+            <button
+              className="col-sm-1"
+              onClick={() => {
+                props.setSelectedGameDetails({
+                  ...game.fields,
+                  recordid: game.id, // Include the record ID here
+                });
+                props.setShowUpdateModal(true);
+              }}
+            >
+              Update
+            </button>
           </div>
         ))}
       </div>
-
-      
-
-      
     </div>
   );
 };

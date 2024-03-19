@@ -16,9 +16,6 @@ function App() {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [selectedGameDetails, setSelectedGameDetails] = useState({}); //for updatemodal only
 
-
-
-
   const getImageUrl = async (gameId) => {
     try {
       const response = await fetch(
@@ -27,16 +24,12 @@ function App() {
       const text = await response.text();
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(text, "text/xml");
-      console.log(xmlDoc.getElementsByTagName("thumbnail")[0].textContent);
       return xmlDoc.getElementsByTagName("thumbnail")[0].textContent;
     } catch (error) {
       console.error("Error fetching image:", error);
       return null;
     }
   };
-
-
-  
 
   const delGame = async (recordId) => {
     try {
@@ -45,8 +38,7 @@ function App() {
         {
           method: "DELETE",
           headers: {
-            Authorization:
-              "Bearer pat4GDBKgsQnZPgiY.c451f2ce36ec83b5deaf0ffae6c9f073e44d9c5ee26d29b71b54edb92d249246",
+            Authorization: import.meta.env.VITE_TOKEN,
 
             "Content-Type": "application/json",
           },
@@ -54,7 +46,7 @@ function App() {
       );
       if (res.ok) {
         console.log("Game deleted successfully");
-        window.location.reload();//refresh to update the UI
+        window.location.reload(); //refresh to update the UI
       } else {
         console.error("Failed to delete game", await response.text());
       }
@@ -62,10 +54,6 @@ function App() {
       console.error("Error deleting game:", error);
     }
   };
-
-
-
-
 
   return (
     <>
@@ -78,17 +66,29 @@ function App() {
           <Route path="list" element={<List />} />
           <Route
             path="games"
-            element={<Games getImageUrl={getImageUrl} delGame={delGame}         showUpdateModal={showUpdateModal}
-            setShowUpdateModal={setShowUpdateModal}
-            selectedGameDetails={selectedGameDetails}
-            setSelectedGameDetails={setSelectedGameDetails}/>}
+            element={
+              <Games
+                getImageUrl={getImageUrl}
+                delGame={delGame}
+                showUpdateModal={showUpdateModal}
+                setShowUpdateModal={setShowUpdateModal}
+                selectedGameDetails={selectedGameDetails}
+                setSelectedGameDetails={setSelectedGameDetails}
+              />
+            }
           />
           <Route
             path="users"
-            element={<Users getImageUrl={getImageUrl} delGame={delGame}         showUpdateModal={showUpdateModal}
-            setShowUpdateModal={setShowUpdateModal}
-            selectedGameDetails={selectedGameDetails}
-            setSelectedGameDetails={setSelectedGameDetails}/>}
+            element={
+              <Users
+                getImageUrl={getImageUrl}
+                delGame={delGame}
+                showUpdateModal={showUpdateModal}
+                setShowUpdateModal={setShowUpdateModal}
+                selectedGameDetails={selectedGameDetails}
+                setSelectedGameDetails={setSelectedGameDetails}
+              />
+            }
           />
 
           <Route path="*" element={<NotFound />} />

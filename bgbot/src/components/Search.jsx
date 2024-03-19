@@ -15,8 +15,7 @@ const Search = (props) => {
         {
           method: "GET",
           headers: {
-            Authorization:
-              "Bearer pat4GDBKgsQnZPgiY.c451f2ce36ec83b5deaf0ffae6c9f073e44d9c5ee26d29b71b54edb92d249246",
+            Authorization: import.meta.env.VITE_TOKEN,
             "Content-Type": "application/json",
           },
         }

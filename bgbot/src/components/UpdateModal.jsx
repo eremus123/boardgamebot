@@ -7,18 +7,17 @@ const Overlay = (props) => {
   const gameidRef = useRef();
   const groupRef = useRef();
   const ownerRef = useRef();
-  const statusRef = useRef()
+  const statusRef = useRef();
   const recordId = props.recordid;
   const newdate = new Date().toISOString().split("T")[0];
 
   const updateGame = async () => {
     const res = await fetch(
-      "https://api.airtable.com/v0/appnFG2kbIVgZNH8a/boardgames/"+recordId,
+      "https://api.airtable.com/v0/appnFG2kbIVgZNH8a/boardgames/" + recordId,
       {
         method: "PATCH",
         headers: {
-          Authorization:
-            "Bearer pat4GDBKgsQnZPgiY.c451f2ce36ec83b5deaf0ffae6c9f073e44d9c5ee26d29b71b54edb92d249246",
+          Authorization: import.meta.env.VITE_TOKEN,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -31,7 +30,6 @@ const Overlay = (props) => {
             dateadded: newdate,
           },
           typecast: true,
-
         }),
       }
     );
@@ -78,34 +76,37 @@ const Overlay = (props) => {
             defaultValue={props.group}
           />
           <div className="col-md-3"></div>
-        <div className="row">
-          <div className="col-md-3"></div>
-          <div className="col-md-3">owner</div>
-          <input
-            ref={ownerRef}
-            type="text"
-            className="col-md-3"
-            defaultValue={props.owner}
-          />
-          <div className="col-md-3"></div>
-        </div>
-        <div className="row">
-          <div className="col-md-3"></div>
-          <div className="col-md-3">status</div>
-          <input
-            ref={statusRef}
-            type="text"
-            className="col-md-3"
-            defaultValue={props.status}
-          />
-          <div className="col-md-3"></div>
-        </div>
+          <div className="row">
+            <div className="col-md-3"></div>
+            <div className="col-md-3">owner</div>
+            <input
+              ref={ownerRef}
+              type="text"
+              className="col-md-3"
+              defaultValue={props.owner}
+            />
+            <div className="col-md-3"></div>
+          </div>
+          <div className="row">
+            <div className="col-md-3"></div>
+            <div className="col-md-3">status</div>
+            <input
+              ref={statusRef}
+              type="text"
+              className="col-md-3"
+              defaultValue={props.status}
+            />
+            <div className="col-md-3"></div>
+          </div>
 
           <br />
 
           <div className="row">
             <div className="col-md-3"></div>
-            <button onClick={() => updateGame(props.recordid)} className="col-md-3">
+            <button
+              onClick={() => updateGame(props.recordid)}
+              className="col-md-3"
+            >
               update
             </button>
             <button
