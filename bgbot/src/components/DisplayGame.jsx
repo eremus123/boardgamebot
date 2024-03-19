@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import UpdateModal from "./UpdateModal";
 
-
 const DisplayGame = (props) => {
   //users
   const [gameNames, setGameNames] = useState([]);
@@ -9,8 +8,6 @@ const DisplayGame = (props) => {
   const [selectedGameName, setSelectedGameName] = useState("");
   const [userName, setUserName] = useState("");
   const [userGroup, setUserGroup] = useState("");
-
-
 
   const searchRef = useRef();
   const abortController = new AbortController();
@@ -62,11 +59,12 @@ const DisplayGame = (props) => {
       // Extract the game ID from the selectedGameName string
       const gameIdMatch = selectedGameName.match(/\(ID: (\d+)\)/);
       const gameId = gameIdMatch ? gameIdMatch[1] : null; // Extract the game ID
-      const selectedGame = gameNames.find(game => game.name === selectedGameName);
-      const imgUrl = selectedGame ? selectedGame.imgUrl : ''; // Extract the imgUrl from the selected game
+      const selectedGame = gameNames.find(
+        (game) => game.name === selectedGameName
+      );
+      const imgUrl = selectedGame ? selectedGame.imgUrl : ""; // Extract the imgUrl from the selected game
       // Get the current date/time in ISO format
       const dateAdded = new Date().toISOString().split("T")[0];
-      console.log(dateAdded);
       //Store only the game Name:
       const gameNameMatch = selectedGameName.match(/^\d+\.\s*(.*?)\s*\(/);
       const gameName = gameNameMatch ? gameNameMatch[1] : selectedGameName; // Use the extracted game name or the original string if no match
@@ -76,9 +74,8 @@ const DisplayGame = (props) => {
         {
           method: "POST", // Specify the method if not 'GET'
           headers: {
-            Authorization:
-              "Bearer pat4GDBKgsQnZPgiY.c451f2ce36ec83b5deaf0ffae6c9f073e44d9c5ee26d29b71b54edb92d249246", // Correctly set the Authorization header
-            "Content-Type": "application/json", // Optionally set the Content-Type header if needed
+            Authorization: import.meta.env.VITE_TOKEN,
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             fields: {
@@ -89,7 +86,7 @@ const DisplayGame = (props) => {
               plays: 0,
               status: "owned",
               dateadded: dateAdded,
-              imageurl: imgUrl
+              imageurl: imgUrl,
             },
             typecast: true,
           }),
@@ -97,14 +94,12 @@ const DisplayGame = (props) => {
       );
 
       if (res.ok) {
-        console.log("Game added successfully");
         //clear the form and hide the modal
         setUserName("");
         setUserGroup("");
         searchRef.current.value = "";
         setShowModal(false);
-        window.location.reload();//refresh to update the UI
-
+        window.location.reload(); //refresh to update the UI
       }
     } catch (error) {
       if (error.name !== "AbortError") {
@@ -119,6 +114,10 @@ const DisplayGame = (props) => {
       const gameIdMatch = selectedGameName.match(/\(ID: (\d+)\)/);
       const gameId = gameIdMatch ? gameIdMatch[1] : null; // Extract the game ID
       // Get the current date/time in ISO format
+      const selectedGame = gameNames.find(
+        (game) => game.name === selectedGameName
+      );
+      const imgUrl = selectedGame ? selectedGame.imgUrl : ""; // Extract the imgUrl from the selected game
       const dateAdded = new Date().toISOString().split("T")[0];
       //Store only the game Name:
       const gameNameMatch = selectedGameName.match(/^\d+\.\s*(.*?)\s*\(/);
@@ -129,8 +128,7 @@ const DisplayGame = (props) => {
         {
           method: "POST",
           headers: {
-            Authorization:
-              "Bearer pat4GDBKgsQnZPgiY.c451f2ce36ec83b5deaf0ffae6c9f073e44d9c5ee26d29b71b54edb92d249246",
+            Authorization: import.meta.env.VITE_TOKEN,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
@@ -142,6 +140,7 @@ const DisplayGame = (props) => {
               plays: 0,
               status: "wishlist",
               dateadded: dateAdded,
+              imageurl: imgUrl,
             },
             typecast: true,
           }),
@@ -155,8 +154,7 @@ const DisplayGame = (props) => {
         setUserGroup("");
         searchRef.current.value = "";
         setShowModal(false);
-        window.location.reload();//refresh to update the UI
-
+        window.location.reload(); //refresh to update the UI
       }
     } catch (error) {
       if (error.name !== "AbortError") {
@@ -173,8 +171,7 @@ const DisplayGame = (props) => {
         {
           method: "GET",
           headers: {
-            Authorization:
-              "Bearer pat4GDBKgsQnZPgiY.c451f2ce36ec83b5deaf0ffae6c9f073e44d9c5ee26d29b71b54edb92d249246",
+            Authorization: import.meta.env.VITE_TOKEN,
             "Content-Type": "application/json",
           },
         }
@@ -200,16 +197,15 @@ const DisplayGame = (props) => {
   }, []);
 
   return (
-    
     <div className="container">
       {props.showUpdateModal && (
         <UpdateModal
-        gameid={props.selectedGameDetails.gameid}
-        gamename={props.selectedGameDetails.gamename}
-        owner={props.selectedGameDetails.owner}
-        group={props.selectedGameDetails.group}
-        status={props.selectedGameDetails.status}
-        recordid= {props.selectedGameDetails.recordid}
+          gameid={props.selectedGameDetails.gameid}
+          gamename={props.selectedGameDetails.gamename}
+          owner={props.selectedGameDetails.owner}
+          group={props.selectedGameDetails.group}
+          status={props.selectedGameDetails.status}
+          recordid={props.selectedGameDetails.recordid}
           fetchGames={fetchGames}
           setShowUpdateModal={props.setShowUpdateModal}
         />
@@ -267,8 +263,6 @@ const DisplayGame = (props) => {
             <button
               className="col-sm-1"
               onClick={() => {
-                console.log(game.name);
-                console.log(game.imgUrl);
                 setSelectedGameName(game.name);
                 setShowModal(true);
               }}
@@ -299,14 +293,18 @@ const DisplayGame = (props) => {
           <button className="col-sm-1" onClick={() => props.delGame(game.id)}>
             Delete
           </button>
-          <button className="col-sm-1" onClick={() => { 
- props.setSelectedGameDetails({
-  ...game.fields,
-  recordid: game.id // Include the record ID here
-});            
-props.setShowUpdateModal(true);}}>
-          Update
-        </button>
+          <button
+            className="col-sm-1"
+            onClick={() => {
+              props.setSelectedGameDetails({
+                ...game.fields,
+                recordid: game.id, // Include the record ID here
+              });
+              props.setShowUpdateModal(true);
+            }}
+          >
+            Update
+          </button>
         </div>
       ))}
     </div>
