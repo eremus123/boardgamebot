@@ -46,7 +46,7 @@ const Search = (props) => {
         {results.map((result, index) => (
           <li key={index}>
             {result.message ? (
-              <span>{result.message}</span> //check if result is a message, then throw the msg, otherwise then generate the results
+              <span>{result.message}</span> //check if result is a message, then throw the msg, otherwise generate the results
             ) : (
               <>
                 <img src={result.fields.imageurl} />
