@@ -1,6 +1,6 @@
 # boardgamebot
 
-Does your boardgame collection look like this: <img src="https://i.imgur.com/KtNjwIg.jpeg"><img src="https://i.imgur.com/sj35Hq5.jpeg"><img src="https://i.imgur.com/reO4M8w.jpeg"><img src="https://i.imgur.com/h4CQ7Vy.jpeg">
+Does your boardgame collection look like this: <img src="https://i.imgur.com/KtNjwIg.jpeg"><img src="https://i.imgur.com/sj35Hq5.jpeg"><img src="https://i.imgur.com/reO4M8w.jpeg">
 
 Or even worse, like this:
 <img src="https://i.imgur.com/fCeUffi.jpeg"><img src="https://i.imgur.com/UxCnaTS.jpeg">
@@ -70,5 +70,5 @@ After Searching for a game, fill in the details and add it to your wishlist or t
 - Airtable API Docs: https://airtable.com/appnFG2kbIVgZNH8a/api/docs#curl/table:boardgames
 - BGG XML API2: https://boardgamegeek.com/wiki/page/BGG_XML_API2
 - BGG XML API2 Guide: https://www.tayloraliss.com/bggapi/index.html
-- User Languages App (iykyk): https://git.generalassemb.ly/sei-sg/sei-sg-49-labs/tree/main/unit2/3-user-languages-app/eremus/languagesapp
+- User Languages App: https://git.generalassemb.ly/sei-sg/sei-sg-49-labs/tree/main/unit2/3-user-languages-app/eremus/languagesapp
 - Debugging: ChatGPT 3.5
