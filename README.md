@@ -70,5 +70,5 @@ After Searching for a game, fill in the details and add it to your wishlist or t
 - Airtable API Docs: https://airtable.com/appnFG2kbIVgZNH8a/api/docs#curl/table:boardgames
 - BGG XML API2: https://boardgamegeek.com/wiki/page/BGG_XML_API2
 - BGG XML API2 Guide: https://www.tayloraliss.com/bggapi/index.html
-- User Languages App: https://git.generalassemb.ly/sei-sg/sei-sg-49-labs/tree/main/unit2/3-user-languages-app/eremus/languagesapp
+- User Languages App (iykyk): https://git.generalassemb.ly/sei-sg/sei-sg-49-labs/tree/main/unit2/3-user-languages-app/eremus/languagesapp
 - Debugging: ChatGPT 3.5
