@@ -6,7 +6,7 @@ const HotGames = () => {
   const FetchHotGames = async () => {
     try {
       const res = await fetch(
-        "http://localhost:8080/https://www.boardgamegeek.com/xmlapi2/hot?boardgame"
+        "https://www.boardgamegeek.com/xmlapi2/hot?boardgame"
       );
       const text = await res.text();
       const parser = new DOMParser();

@@ -19,7 +19,7 @@ function App() {
   const getImageUrl = async (gameId) => {
     try {
       const response = await fetch(
-        `http://localhost:8080/https://www.boardgamegeek.com/xmlapi2/thing?id=${gameId}`
+        `https://www.boardgamegeek.com/xmlapi2/thing?id=${gameId}`
       );
       const text = await response.text();
       const parser = new DOMParser();
