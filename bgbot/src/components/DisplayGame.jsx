@@ -21,7 +21,7 @@ const DisplayGame = (props) => {
       const req = new XMLHttpRequest();
       req.open(
         "GET",
-        "http://localhost:8080/https://www.boardgamegeek.com/xmlapi2/search?type=boardgame,boardgameexpansion&query=" +
+        "https://www.boardgamegeek.com/xmlapi2/search?type=boardgame,boardgameexpansion&query=" +
           searchgame,
         true
       );
