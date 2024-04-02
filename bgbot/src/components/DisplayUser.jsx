@@ -114,7 +114,7 @@ const DisplayUser = (props) => {
               onClick={() => {
                 props.setSelectedGameDetails({
                   ...game.fields,
-                  recordid: game.id, // Include the record ID
+                  recordid: game.id, // Include the record ID here
                 });
                 props.setShowUpdateModal(true);
               }}

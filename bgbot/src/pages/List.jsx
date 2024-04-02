@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const List = () => {
   const [groups, setGroups] = useState([]);
 
-  useEffect(() => {
+ useEffect(() => {
     const fetchGroups = async () => {
       try {
         const res = await fetch(
@@ -12,15 +12,14 @@ const List = () => {
           {
             method: "GET",
             headers: {
-              Authorization: import.meta.env.VITE_TOKEN,
-              "Content-Type": "application/json",
+              Authorization:
+                "Bearer pat4GDBKgsQnZPgiY.c451f2ce36ec83b5deaf0ffae6c9f073e44d9c5ee26d29b71b54edb92d249246", 
+              "Content-Type": "application/json", 
             },
-          }
-        );
+          
+        });
         const data = await res.json();
-        const uniqueGroups = [
-          ...new Set(data.records.flatMap((record) => record.fields.group)),
-        ];
+        const uniqueGroups = [...new Set(data.records.flatMap(record => record.fields.group))];
         setGroups(uniqueGroups);
       } catch (err) {
         console.error(err);
@@ -28,7 +27,12 @@ const List = () => {
     };
 
     fetchGroups();
-  }, []);
+ }, []);
+
+
+
+
+
 
   return (
     <>
@@ -41,7 +45,7 @@ const List = () => {
         ))}
       </ul>
     </>
-  );
+ );
 };
 
 export default List;
